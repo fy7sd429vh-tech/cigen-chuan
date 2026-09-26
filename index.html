@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eadfcf">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="词根串串香">
+  <meta name="description" content="按词根一串串学单词：看词猜意思、看意思猜词，带美式发音和词根拆解。可安装到手机和电脑。">
+  <title>词根串串香</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=5">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/icon-180.png">
+  <link rel="stylesheet" href="./css/app.css?v=5">
+</head>
+<body>
+  <div id="wechat-tip" class="wechat-tip" hidden>请点右上角 ··· → 在 Safari 中打开，再点分享 → 添加到主屏幕</div>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 2v20" stroke="#3a2a10" stroke-width="2.2"/>
+            <rect x="6.5" y="5" width="11" height="4" rx="2" fill="#fff8e8"/>
+            <rect x="5" y="11" width="14" height="4" rx="2" fill="#fff8e8"/>
+            <rect x="7" y="17" width="10" height="3.4" rx="1.7" fill="#fff8e8"/>
+          </svg>
+        </div>
+        <div>
+          <h1>词根串串香</h1>
+          <p>一个词根 · 串好六个词 · 带发音和答案</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="ghost" id="btn-how">安装 / 转发</button>
+        <button class="ghost" id="btn-share">分享</button>
+        <button class="solid" id="btn-install">安装到桌面</button>
+      </div>
+    </header>
+
+    <main id="home">
+      <section class="hero">
+        <div>
+          <div class="kicker">WORD ROOT SKEWER</div>
+          <h2>按词根学，<em>一串一串</em>往上串</h2>
+          <p class="desc">每串先听词根读音和中文意思，再把 6 个词一个个串上去。选完立刻听单词、看拆解和例句。电脑键盘 A B C D 也能答。装到手机主屏幕后可离线复习。</p>
+          <div class="hero-cta">
+            <button class="big-btn gold" id="btn-today">开始今日一串</button>
+            <button class="big-btn" id="btn-how2">如何装到手机</button>
+          </div>
+        </div>
+        <div class="today">
+          <div class="kicker">今日词根</div>
+          <p class="root" id="today-root">prim = 第一</p>
+          <p id="today-tip" class="desc"></p>
+          <div class="dots" id="today-dots"></div>
+        </div>
+      </section>
+      <section class="stats">
+        <div class="stat"><b id="stat-words">0</b><span>已串上的词</span></div>
+        <div class="stat"><b id="stat-correct">0</b><span>累计答对</span></div>
+        <div class="stat"><b id="stat-strings">0</b><span>完整串完</span></div>
+      </section>
+      <div class="section-title">
+        <h3>全部词根串</h3>
+        <span id="bank-count">词根串加载中</span>
+      </div>
+      <div class="grid" id="grid"></div>
+    </main>
+
+    <section class="learn" id="learn">
+      <div class="learn-head">
+        <div>
+          <p class="root-title" id="learn-root">prim = 第一</p>
+          <div class="sub" id="learn-sub"></div>
+        </div>
+        <div class="head-right">
+          <div class="serial" id="serial">第 3976 串</div>
+          <div class="dots" id="dots-head" style="justify-content:flex-end"></div>
+          <div class="sub" id="done-head">0/6 个词已串上</div>
+        </div>
+      </div>
+      <div class="stage">
+        <aside class="skewer-wrap">
+          <div class="rod"></div>
+          <div class="skewer" id="skewer"></div>
+        </aside>
+        <div>
+          <div class="quiz">
+            <div class="quiz-top">
+              <div class="badge" id="badge">先学词根</div>
+              <div class="timer" id="timer">听</div>
+            </div>
+            <div class="bar"><i id="bar-fill"></i></div>
+            <div class="prompt" id="prompt"></div>
+            <div id="reveal"></div>
+            <div class="foot-note" id="foot-note">点选项或键盘 A B C D</div>
+          </div>
+          <div class="options" id="options"></div>
+          <div class="next-row" id="learn-nav">
+            <button class="ghost" id="btn-back">返回目录</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="summary" id="summary">
+      <div class="summary-board">
+        <h2 id="sum-title">lect 选 · 收 · 读</h2>
+        <div class="skewer-big" id="sum-skewer"></div>
+        <p class="foot-note" id="sum-score" style="color:#3a2a10"></p>
+      </div>
+      <div class="summary-actions">
+        <button class="ghost" id="btn-home">回目录</button>
+        <button class="big-btn" id="btn-retry">再串一次</button>
+        <button class="big-btn gold" id="btn-next-string">下一串</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <div class="modal" id="modal">
+    <div class="box">
+      <h3>转发安装到手机和电脑</h3>
+      <p class="install-hint">
+        <b>手机：</b>必须用 <u>Safari</u> 打开下面这个网址（不要用微信）。然后点底部分享 → 添加到主屏幕。以后主屏幕点一下图标就能学。<br>
+        <b>电脑：</b>双击桌面上的「词根串串香」；或 Chrome 点「安装」。<br>
+        <b>发给好友：</b>把这个网址或桌面上的 zip 发出去即可。
+      </p>
+      <div class="qr"><img id="qr" alt="二维码"></div>
+      <p class="foot-note" id="share-url"></p>
+      <div class="next-row">
+        <button class="big-btn" id="btn-close-modal">好的</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/data.js?v=5"></script>
+  <script src="./js/junior.js?v=5"></script>
+  <script src="./js/app.js?v=5"></script>
+  <script>
+    document.getElementById("btn-how2").onclick = () => document.getElementById("modal").classList.add("on");
+  </script>
+</body>
+</html>
