@@ -306,21 +306,32 @@ body.studying { overflow: hidden; height: 100%; }
 
 @media (max-width: 860px) {
   .hero { grid-template-columns: 1fr; }
-  .stage { grid-template-columns: 1fr; }
-  .skewer { flex-direction: row; overflow-x: auto; padding: 18px 8px 8px; gap: 8px; }
-  .rod { left: 12px; right: 12px; top: 22px; bottom: auto; height: 6px; width: auto; }
-  .kebab { min-width: 132px; flex: none; }
-  .opt { font-size: 18px; min-height: 56px; }
-  .root-title { font-size: 28px; }
+  .learn.on { padding: 8px 8px 12px; }
+  .learn-head { padding: 10px 12px; }
+  .root-title { font-size: 22px; }
+  .root-title em { font-size: 18px; }
+  .stage { grid-template-columns: 126px 1fr; gap: 8px; }
+  .skewer-wrap { padding: 10px 6px 12px; }
+  .skewer { flex-direction: column; overflow: visible; padding-left: 14px; gap: 6px; }
+  .rod { left: 16px; top: 8px; bottom: 14px; width: 5px; height: auto; right: auto; }
+  .kebab { min-width: 0; padding: 6px 6px; min-height: 40px; }
+  .kebab .kw { font-size: 12px; }
+  .kebab .km { font-size: 10px; }
+  .options { grid-template-columns: 1fr 1fr; }
+  .opt { font-size: 16px; min-height: 52px; padding: 10px 10px; }
+  .word { font-size: clamp(28px, 8vw, 48px); }
+  .ask { font-size: 20px; }
   .stats { grid-template-columns: 1fr 1fr 1fr; }
   .srow { grid-template-columns: 1fr; }
   .srow .pre, .srow .wordcard { justify-self: center; }
 }
 @media (max-width: 560px) {
-  .options { grid-template-columns: 1fr; }
   .hero h2 { font-size: 26px; }
-  .word { font-size: 48px; }
   .app { padding: 10px 10px 28px; }
+  .stage { grid-template-columns: 108px 1fr; gap: 6px; }
+  .options { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .opt { font-size: 15px; min-height: 48px; }
+  .quiz { padding: 12px 10px 12px; min-height: 0; }
 }
 
 .intro-box { text-align: center; padding: 6px 8px 4px; }
@@ -401,8 +412,6 @@ body.studying { overflow: hidden; height: 100%; }
 .go-learn-wrap .big-btn { width: 100%; padding: 14px 18px; font-size: 17px; }
 @media (max-width: 860px) {
   .hero { padding: 16px 16px; }
-  .hero h2 { font-size: 26px; }
-  .learn-head { padding: 8px 4px; }
 }
 
 #btn-back-roots { margin: 0 0 12px; }
