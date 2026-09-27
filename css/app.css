@@ -137,12 +137,13 @@ button { cursor: pointer; }
 }
 .learn.on .learn-head { flex: 0 0 auto; margin-bottom: 8px; }
 .learn.on .stage { flex: 1 1 0; min-height: 0; }
-.stage > * { min-height: 0; max-height: 100%; overflow: hidden; }
+.stage > * { min-height: 0; max-height: 100%; overflow: hidden; min-width: 0; }
 .stage > div {
   display: flex;
   flex-direction: column;
   min-height: 0;
   height: 100%;
+  min-width: 0;
 }
 
 #home.hidden, .home.hidden, body.studying #home { display: none !important; }
@@ -231,11 +232,15 @@ body.studying, body.studying html { overflow: hidden; height: 100%; height: 100d
 }
 .foot-note { text-align: center; color: var(--muted); font-size: 11px; margin: 4px 0 0; flex: none; }
 
-.options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; flex: none; }
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; flex: none; min-width: 0; }
 .opt {
-  display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px;
   border: 1px solid transparent; text-align: left; font-size: 16px;
   font-family: var(--font-zh); font-weight: 700; min-height: 46px;
+  min-width: 0; overflow: hidden;
+}
+.opt > span:last-child {
+  min-width: 0; flex: 1; overflow-wrap: anywhere; word-break: break-word; line-height: 1.2;
 }
 .opt .mark {
   width: 28px; height: 28px; border-radius: 50%; background: #1a1814; color: #fff;
@@ -323,21 +328,25 @@ body.studying, body.studying html { overflow: hidden; height: 100%; height: 100d
 
 @media (max-width: 860px) {
   .hero { grid-template-columns: 1fr; }
-  .learn.on { padding: 8px 8px 12px; }
-  .learn-head { padding: 10px 12px; }
-  .root-title { font-size: 22px; }
-  .root-title em { font-size: 18px; }
-  .stage { grid-template-columns: 126px 1fr; gap: 8px; }
-  .skewer-wrap { padding: 10px 6px 12px; }
-  .skewer { flex-direction: column; overflow: visible; padding-left: 14px; gap: 6px; }
-  .rod { left: 16px; top: 8px; bottom: 14px; width: 5px; height: auto; right: auto; }
-  .kebab { min-width: 0; padding: 6px 6px; min-height: 40px; }
-  .kebab .kw { font-size: 12px; }
-  .kebab .km { font-size: 10px; }
-  .options { grid-template-columns: 1fr 1fr; }
-  .opt { font-size: 16px; min-height: 52px; padding: 10px 10px; }
-  .word { font-size: clamp(28px, 8vw, 48px); }
-  .ask { font-size: 20px; }
+  .learn.on { padding: 6px 6px 8px; }
+  .learn-head { padding: 8px 10px; }
+  .root-title { font-size: 20px; }
+  .root-title em { font-size: 16px; }
+  .stage { grid-template-columns: 102px minmax(0, 1fr); gap: 6px; }
+  .skewer-wrap { padding: 8px 4px 10px; }
+  .skewer { flex-direction: column; overflow: hidden; padding-left: 12px; gap: 5px; }
+  .rod { left: 14px; top: 8px; bottom: 14px; width: 5px; height: auto; right: auto; }
+  .kebab { min-width: 0; padding: 5px 4px; min-height: 36px; }
+  .kebab .kw { font-size: 11px; }
+  .kebab .km { font-size: 9px; }
+  .quiz { padding: 8px 8px 6px; min-width: 0; }
+  .options { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .opt { font-size: 14px; min-height: 44px; padding: 8px 8px; gap: 6px; }
+  .opt .mark { width: 22px; height: 22px; font-size: 12px; }
+  .reveal { max-height: 70px; }
+  .formula, .ans-line, .example, .note { overflow-wrap: anywhere; }
+  .word { font-size: clamp(24px, 7vw, 40px); }
+  .ask { font-size: 18px; }
   .stats { grid-template-columns: 1fr 1fr 1fr; }
   .srow { grid-template-columns: 1fr; }
   .srow .pre, .srow .wordcard { justify-self: center; }
@@ -345,12 +354,16 @@ body.studying, body.studying html { overflow: hidden; height: 100%; height: 100d
 @media (max-width: 560px) {
   .hero h2 { font-size: 26px; }
   .app { padding: 10px 10px 28px; }
-  .stage { grid-template-columns: 108px 1fr; gap: 6px; }
-  .options { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .opt { font-size: 15px; min-height: 48px; }
-  .quiz { padding: 12px 10px 12px; min-height: 0; }
+  .stage { grid-template-columns: 86px minmax(0, 1fr); gap: 6px; }
+  .kebab .km { display: none; }
+  .options { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .opt { font-size: 13px; min-height: 42px; padding: 7px 6px; }
+  .quiz { padding: 8px 8px 6px; min-height: 0; }
+  .foot-note { font-size: 10px; }
+  .next-row .ghost { padding: 6px 8px; }
+  #learn-nav #btn-next { min-width: 96px; padding: 8px 12px; font-size: 14px; }
 }
-@media (max-height: 860px) {
+@media (max-height: 860px) and (min-width: 861px) {
   .learn.on { padding: 6px 8px; }
   .learn-head { padding: 6px 12px; margin-bottom: 6px; }
   .root-title { font-size: 22px; }
