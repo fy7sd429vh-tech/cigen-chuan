@@ -1,4 +1,4 @@
-const CACHE = "cigen-chuan-v5";
+const CACHE = "cigen-chuan-v6";
 const ASSETS = [
   "./",
   "./index.html",

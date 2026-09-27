@@ -17,6 +17,7 @@
     audio: null,
     stats: loadStats(),
     installEvent: null,
+    listIndex: 0,
   };
 
   function loadStats() {
@@ -92,6 +93,7 @@
     $("#home").classList.remove("hidden");
     $("#learn").classList.remove("on");
     $("#summary").classList.remove("on");
+    window.scrollTo(0, 0);
     const core = coreStrings();
     const today = core[new Date().getDate() % core.length];
     $("#today-root").innerHTML = today.root + ' <span class="eq">= ' + today.meaning + "</span>";
@@ -104,34 +106,75 @@
     $("#stat-words").textContent = mastered();
     $("#stat-correct").textContent = state.stats.correct;
     $("#stat-strings").textContent = STRINGS.filter((s) => doneCount(s.id) === totalOf(s)).length;
-    $("#grid").innerHTML = STRINGS.map((s, idx) => {
-      const n = doneCount(s.id);
-      const total = totalOf(s);
-      const tag = s.single ? "单记" : (isJunior(s) ? "初中" : "");
-      return `<button class="string-card" data-i="${idx}">
-        <div class="no">第 ${s.no} 串${tag ? " · " + tag : ""}</div>
-        <div class="root-line">${escapeHtml(s.root)} <em>= ${escapeHtml(s.meaning)}</em></div>
-        <div class="tip">${escapeHtml(s.tip)}</div>
-        <div class="progress-mini"><i style="width:${(n / total) * 100}%"></i></div>
-        <div class="sub">${n}/${total} 个词已串上${s.also ? " · 也写作 " + s.also : ""}</div>
-      </button>`;
-    }).join("");
-    $("#grid").querySelectorAll(".string-card").forEach((el) => {
-      el.onclick = () => startString(Number(el.dataset.i));
-    });
+    if (state.listIndex < 0 || state.listIndex >= STRINGS.length) state.listIndex = 0;
+    renderWordPanel();
     const totalWords = STRINGS.reduce((n, s) => n + s.words.length, 0);
     const bank = document.getElementById("bank-count");
     const juniorN = STRINGS.filter(isJunior).length;
-    if (bank) bank.textContent = STRINGS.length + " 串 · " + totalWords + " 词 · 四六级 " + core.length + " 串 + 初中 " + juniorN + " 串";
+    if (bank) bank.textContent = STRINGS.length + " 串 · " + totalWords + " 词 · 点单词直接学";
+    const go = document.getElementById("btn-go-learn");
+    if (go) go.onclick = () => startString(state.listIndex);
   }
 
-  function startString(index, fromWord) {
+  function renderWordPanel() {
+    const tabs = document.getElementById("unit-tabs");
+    const list = document.getElementById("word-list");
+    if (!tabs || !list) return;
+    tabs.innerHTML = STRINGS.map((s, idx) => {
+      const tag = s.single ? "单记" : (isJunior(s) ? "初中" : "");
+      const on = idx === state.listIndex ? " on" : "";
+      return `<button class="unit-tab${on}" data-i="${idx}">第${s.no}串 ${escapeHtml(s.root)}${tag ? " · " + tag : ""}</button>`;
+    }).join("");
+    tabs.querySelectorAll(".unit-tab").forEach((el) => {
+      el.onclick = () => {
+        state.listIndex = Number(el.dataset.i);
+        renderWordPanel();
+      };
+    });
+    const active = tabs.querySelector(".unit-tab.on");
+    if (active) active.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+    const s = STRINGS[state.listIndex];
+    const done = state.stats.done[s.id] || [];
+    const n = done.filter(Boolean).length;
+    document.getElementById("unit-title").innerHTML = escapeHtml(s.root) + ' <em>= ' + escapeHtml(s.meaning) + "</em>";
+    document.getElementById("unit-sub").textContent = s.tip + (s.also ? " · 也写作 " + s.also : "");
+    document.getElementById("unit-count").textContent = n + "/" + totalOf(s) + " 词";
+    list.innerHTML = s.words.map((w, wi) => {
+      const learned = !!done[wi];
+      return `<div class="word-row${learned ? " done" : ""}" data-w="${wi}">
+        <button class="speaker" type="button" data-speak="${escapeHtml(w.word)}" aria-label="听发音">♪</button>
+        <div class="body">
+          <span class="en">${highlight(w.word, w.highlight)}</span>
+          <span class="meta">${escapeHtml(w.pos || "")} ${escapeHtml(w.meaning)}</span>
+        </div>
+        <span class="mark">${learned ? "✓" : ""}</span>
+      </div>`;
+    }).join("");
+    list.querySelectorAll(".speaker").forEach((el) => {
+      el.onclick = (e) => {
+        e.stopPropagation();
+        speak(el.dataset.speak);
+      };
+    });
+    list.querySelectorAll(".word-row").forEach((el) => {
+      el.onclick = () => startWord(state.listIndex, Number(el.dataset.w));
+    });
+  }
+
+  function startWord(index, wordIndex) {
+    state.listIndex = index;
+    startString(index, wordIndex, true);
+  }
+
+  function startString(index, fromWord, jumpWord) {
     state.stringIndex = index;
+    state.listIndex = index;
     state.wordIndex = fromWord || 0;
     $("#home").classList.add("hidden");
     $("#summary").classList.remove("on");
     $("#learn").classList.add("on");
-    if (fromWord) {
+    window.scrollTo(0, 0);
+    if (jumpWord) {
       state.view = "learn";
       showWord();
     } else {
@@ -234,6 +277,7 @@
   function showWord() {
     const { s, w } = current();
     state.view = "learn";
+    window.scrollTo(0, 0);
     state.locked = false;
     state.picked = -1;
     clearInterval(state.timer);

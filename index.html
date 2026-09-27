@@ -12,7 +12,7 @@
   <link rel="manifest" href="./manifest.webmanifest?v=5">
   <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icons/icon-180.png">
-  <link rel="stylesheet" href="./css/app.css?v=5">
+  <link rel="stylesheet" href="./css/app.css?v=6">
 </head>
 <body>
   <div id="wechat-tip" class="wechat-tip" hidden>可直接在微信里学习。点右上角 ··· 就能转发给好友。</div>
@@ -63,10 +63,21 @@
         <div class="stat"><b id="stat-strings">0</b><span>完整串完</span></div>
       </section>
       <div class="section-title">
-        <h3>全部词根串</h3>
+        <h3>单词列表</h3>
         <span id="bank-count">词根串加载中</span>
       </div>
-      <div class="grid" id="grid"></div>
+      <div class="unit-tabs" id="unit-tabs"></div>
+      <div class="unit-head">
+        <div>
+          <div class="unit-title" id="unit-title">prim = 第一</div>
+          <div class="unit-sub" id="unit-sub"></div>
+        </div>
+        <div class="unit-count" id="unit-count"></div>
+      </div>
+      <div class="word-list" id="word-list"></div>
+      <div class="go-learn-wrap">
+        <button class="big-btn gold" id="btn-go-learn">去背这一串</button>
+      </div>
     </main>
 
     <section class="learn" id="learn">
@@ -136,9 +147,9 @@
     </div>
   </div>
 
-  <script src="./js/data.js?v=5"></script>
-  <script src="./js/junior.js?v=5"></script>
-  <script src="./js/app.js?v=5"></script>
+  <script src="./js/data.js?v=6"></script>
+  <script src="./js/junior.js?v=6"></script>
+  <script src="./js/app.js?v=6"></script>
   <script>
     document.getElementById("btn-how2").onclick = () => document.getElementById("modal").classList.add("on");
   </script>
