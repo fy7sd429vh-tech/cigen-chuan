@@ -12,7 +12,7 @@
   <link rel="manifest" href="./manifest.webmanifest?v=5">
   <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icons/icon-180.png">
-  <link rel="stylesheet" href="./css/app.css?v=6">
+  <link rel="stylesheet" href="./css/app.css?v=7">
 </head>
 <body>
   <div id="wechat-tip" class="wechat-tip" hidden>可直接在微信里学习。点右上角 ··· 就能转发给好友。</div>
@@ -39,7 +39,7 @@
       </div>
     </header>
 
-    <main id="home">
+    <main id="home" class="home">
       <section class="hero">
         <div>
           <div class="kicker">WORD ROOT SKEWER</div>
@@ -63,20 +63,25 @@
         <div class="stat"><b id="stat-strings">0</b><span>完整串完</span></div>
       </section>
       <div class="section-title">
-        <h3>单词列表</h3>
-        <span id="bank-count">词根串加载中</span>
+        <h3 id="list-title">词根列表</h3>
+        <span id="bank-count">词根加载中</span>
       </div>
-      <div class="unit-tabs" id="unit-tabs"></div>
-      <div class="unit-head">
-        <div>
-          <div class="unit-title" id="unit-title">prim = 第一</div>
-          <div class="unit-sub" id="unit-sub"></div>
+      <div id="root-panel">
+        <div class="word-list" id="root-list"></div>
+      </div>
+      <div id="word-panel" hidden>
+        <button class="ghost" id="btn-back-roots">← 全部词根</button>
+        <div class="unit-head">
+          <div>
+            <div class="unit-title" id="unit-title">prim = 第一</div>
+            <div class="unit-sub" id="unit-sub"></div>
+          </div>
+          <div class="unit-count" id="unit-count"></div>
         </div>
-        <div class="unit-count" id="unit-count"></div>
-      </div>
-      <div class="word-list" id="word-list"></div>
-      <div class="go-learn-wrap">
-        <button class="big-btn gold" id="btn-go-learn">去背这一串</button>
+        <div class="word-list" id="word-list"></div>
+        <div class="go-learn-wrap">
+          <button class="big-btn gold" id="btn-go-learn">去背这一串</button>
+        </div>
       </div>
     </main>
 
@@ -147,9 +152,9 @@
     </div>
   </div>
 
-  <script src="./js/data.js?v=6"></script>
-  <script src="./js/junior.js?v=6"></script>
-  <script src="./js/app.js?v=6"></script>
+  <script src="./js/data.js?v=7"></script>
+  <script src="./js/junior.js?v=7"></script>
+  <script src="./js/app.js?v=7"></script>
   <script>
     document.getElementById("btn-how2").onclick = () => document.getElementById("modal").classList.add("on");
   </script>

@@ -18,6 +18,7 @@
     stats: loadStats(),
     installEvent: null,
     listIndex: 0,
+    homeView: "roots",
   };
 
   function loadStats() {
@@ -107,32 +108,58 @@
     $("#stat-correct").textContent = state.stats.correct;
     $("#stat-strings").textContent = STRINGS.filter((s) => doneCount(s.id) === totalOf(s)).length;
     if (state.listIndex < 0 || state.listIndex >= STRINGS.length) state.listIndex = 0;
-    renderWordPanel();
+    if (state.homeView === "words") renderWordPanel();
+    else renderRootList();
     const totalWords = STRINGS.reduce((n, s) => n + s.words.length, 0);
     const bank = document.getElementById("bank-count");
-    const juniorN = STRINGS.filter(isJunior).length;
-    if (bank) bank.textContent = STRINGS.length + " 串 · " + totalWords + " 词 · 点单词直接学";
+    if (bank) bank.textContent = STRINGS.length + " 个词根 · " + totalWords + " 词";
     const go = document.getElementById("btn-go-learn");
     if (go) go.onclick = () => startString(state.listIndex);
+    const back = document.getElementById("btn-back-roots");
+    if (back) back.onclick = () => { state.homeView = "roots"; renderHome(); };
+  }
+
+  function renderRootList() {
+    const roots = document.getElementById("root-list");
+    const rootPanel = document.getElementById("root-panel");
+    const wordPanel = document.getElementById("word-panel");
+    const title = document.getElementById("list-title");
+    if (title) title.textContent = "词根列表";
+    if (rootPanel) rootPanel.hidden = false;
+    if (wordPanel) wordPanel.hidden = true;
+    if (!roots) return;
+    roots.innerHTML = STRINGS.map((s, idx) => {
+      const n = doneCount(s.id);
+      const total = totalOf(s);
+      const learned = n === total && total > 0;
+      const tag = s.single ? "单记" : (isJunior(s) ? "初中" : "词根");
+      return `<button class="root-row${learned ? " done" : ""}" data-i="${idx}">
+        <div class="body">
+          <div class="en">${escapeHtml(s.root)} <em>= ${escapeHtml(s.meaning)}</em></div>
+          <div class="meta">${escapeHtml(tag)} · ${escapeHtml(s.tip)}</div>
+        </div>
+        <div class="right">${learned ? "✓ " : ""}${n}/${total}</div>
+      </button>`;
+    }).join("");
+    roots.querySelectorAll(".root-row").forEach((el) => {
+      el.onclick = () => {
+        state.listIndex = Number(el.dataset.i);
+        state.homeView = "words";
+        renderWordPanel();
+        window.scrollTo(0, 0);
+      };
+    });
   }
 
   function renderWordPanel() {
-    const tabs = document.getElementById("unit-tabs");
     const list = document.getElementById("word-list");
-    if (!tabs || !list) return;
-    tabs.innerHTML = STRINGS.map((s, idx) => {
-      const tag = s.single ? "单记" : (isJunior(s) ? "初中" : "");
-      const on = idx === state.listIndex ? " on" : "";
-      return `<button class="unit-tab${on}" data-i="${idx}">第${s.no}串 ${escapeHtml(s.root)}${tag ? " · " + tag : ""}</button>`;
-    }).join("");
-    tabs.querySelectorAll(".unit-tab").forEach((el) => {
-      el.onclick = () => {
-        state.listIndex = Number(el.dataset.i);
-        renderWordPanel();
-      };
-    });
-    const active = tabs.querySelector(".unit-tab.on");
-    if (active) active.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+    const rootPanel = document.getElementById("root-panel");
+    const wordPanel = document.getElementById("word-panel");
+    const title = document.getElementById("list-title");
+    if (title) title.textContent = "单词列表";
+    if (rootPanel) rootPanel.hidden = true;
+    if (wordPanel) wordPanel.hidden = false;
+    if (!list) return;
     const s = STRINGS[state.listIndex];
     const done = state.stats.done[s.id] || [];
     const n = done.filter(Boolean).length;
