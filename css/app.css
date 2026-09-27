@@ -119,8 +119,25 @@ button { cursor: pointer; }
 .progress-mini i { display: block; height: 100%; background: linear-gradient(90deg, #d7b56a, #b08a3e); }
 
 .learn { display: none; }
-.learn.on { display: block; }
-#home.hidden, .home.hidden { display: none !important; }
+.learn.on {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  background:
+    radial-gradient(1200px 600px at 20% -10%, #f6efe3 0%, transparent 55%),
+    linear-gradient(#eadfcf, #e6d7c2);
+  padding: 16px 18px 40px;
+  max-width: none;
+}
+.learn.on .learn-head,
+.learn.on .stage { max-width: 980px; margin: 0 auto; }
+
+#home.hidden, .home.hidden, body.studying #home { display: none !important; }
+body.studying { overflow: hidden; height: 100%; }
+
 
 .learn-head {
   background: var(--paper); border-radius: 24px; padding: 14px 18px;
@@ -228,7 +245,20 @@ button { cursor: pointer; }
 .next-row { display: flex; justify-content: center; gap: 10px; margin-top: 14px; }
 
 .summary { display: none; }
-.summary.on { display: block; }
+.summary.on {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: auto;
+  background:
+    radial-gradient(1200px 600px at 20% -10%, #f6efe3 0%, transparent 55%),
+    linear-gradient(#eadfcf, #e6d7c2);
+  padding: 16px 18px 40px;
+}
+.summary.on .summary-board,
+.summary.on .summary-actions { max-width: 720px; margin-left: auto; margin-right: auto; }
+
 .summary-board {
   background: linear-gradient(180deg, #d9c7a6, #cbb48a);
   border-radius: 28px; padding: 28px 16px 24px; position: relative; overflow: hidden;

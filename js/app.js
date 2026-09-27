@@ -91,9 +91,7 @@
 
   function renderHome() {
     state.view = "home";
-    $("#home").classList.remove("hidden");
-    $("#learn").classList.remove("on");
-    $("#summary").classList.remove("on");
+    leaveStudy();
     window.scrollTo(0, 0);
     const core = coreStrings();
     const today = core[new Date().getDate() % core.length];
@@ -144,9 +142,7 @@
     roots.querySelectorAll(".root-row").forEach((el) => {
       el.onclick = () => {
         state.listIndex = Number(el.dataset.i);
-        state.homeView = "words";
-        renderWordPanel();
-        window.scrollTo(0, 0);
+        startString(Number(el.dataset.i));
       };
     });
   }
@@ -193,14 +189,33 @@
     startString(index, wordIndex, true);
   }
 
+  function enterStudy() {
+    document.body.classList.add("studying");
+    const home = $("#home");
+    home.classList.add("hidden");
+    home.setAttribute("hidden", "");
+    home.style.display = "none";
+    $("#summary").classList.remove("on");
+    $("#learn").classList.add("on");
+    window.scrollTo(0, 0);
+    const learn = $("#learn");
+    if (learn) learn.scrollTop = 0;
+  }
+  function leaveStudy() {
+    document.body.classList.remove("studying");
+    const home = $("#home");
+    home.classList.remove("hidden");
+    home.removeAttribute("hidden");
+    home.style.display = "";
+    $("#learn").classList.remove("on");
+    $("#summary").classList.remove("on");
+  }
+
   function startString(index, fromWord, jumpWord) {
     state.stringIndex = index;
     state.listIndex = index;
     state.wordIndex = fromWord || 0;
-    $("#home").classList.add("hidden");
-    $("#summary").classList.remove("on");
-    $("#learn").classList.add("on");
-    window.scrollTo(0, 0);
+    enterStudy();
     if (jumpWord) {
       state.view = "learn";
       showWord();
@@ -446,8 +461,11 @@
   function showSummary() {
     state.view = "summary";
     const s = STRINGS[state.stringIndex];
+    document.body.classList.add("studying");
+    $("#home").classList.add("hidden");
     $("#learn").classList.remove("on");
     $("#summary").classList.add("on");
+    window.scrollTo(0, 0);
     const n = doneCount(s.id);
     $("#sum-title").innerHTML = "<b>" + escapeHtml(s.root) + "</b> " + escapeHtml(s.meaning) + " · 这 " + totalOf(s) + " 个词都带它";
     $("#sum-skewer").innerHTML = s.words.map((w) => {
@@ -545,7 +563,13 @@
   }
 
   if ("serviceWorker" in navigator && location.protocol !== "file:") {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
+    const local = location.hostname === "127.0.0.1" || location.hostname === "localhost";
+    if (local) {
+      navigator.serviceWorker.getRegistrations().then((rs) => rs.forEach((r) => r.unregister()));
+      if (window.caches) caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
+    } else {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    }
   }
 
   if (/MicroMessenger/i.test(navigator.userAgent)) {
