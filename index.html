@@ -12,7 +12,7 @@
   <link rel="manifest" href="./manifest.webmanifest?v=5">
   <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icons/icon-180.png">
-  <link rel="stylesheet" href="./css/app.css?v=14">
+  <link rel="stylesheet" href="./css/app.css?v=15">
 </head>
 <body>
   <div id="wechat-tip" class="wechat-tip" hidden>可直接在微信里学习。点右上角 ··· 就能转发给好友。</div>
@@ -115,6 +115,7 @@
             <div class="foot-note" id="foot-note">点选项或键盘 A B C D</div>
             <div class="next-row" id="learn-nav">
               <button class="ghost" id="btn-back">返回目录</button>
+              <button class="big-btn gold" id="btn-next" hidden>下一词</button>
             </div>
           </div>
         </div>
@@ -152,9 +153,9 @@
     </div>
   </div>
 
-  <script src="./js/data.js?v=14"></script>
-  <script src="./js/junior.js?v=14"></script>
-  <script src="./js/app.js?v=14"></script>
+  <script src="./js/data.js?v=15"></script>
+  <script src="./js/junior.js?v=15"></script>
+  <script src="./js/app.js?v=15"></script>
   <script>
     document.getElementById("btn-how2").onclick = () => document.getElementById("modal").classList.add("on");
   </script>

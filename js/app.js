@@ -310,6 +310,7 @@
     $("#reveal").innerHTML = `<div class="next-row"><button class="big-btn gold" id="btn-begin">${s.single || totalOf(s) === 1 ? "开始学这个词" : "开始串这 " + totalOf(s) + " 个词"}</button></div>`;
     $("#options").innerHTML = "";
     $("#options").style.display = "none";
+    hideNextBtn();
     $("#foot-note").textContent = "先听词根，再记意思，然后才猜词";
     $("#btn-root-en").onclick = () => speak(speakRootName(s));
     $("#btn-root-zh").onclick = () => speak(s.meaning, "zh");
@@ -375,6 +376,7 @@
     const modeName = w.mode === "meaning" ? "猜意思" : "猜拼写";
     $("#badge").textContent = "第 " + (state.wordIndex + 1) + " / " + totalOf(s) + " 词 · " + modeName;
     $("#reveal").innerHTML = "";
+    hideNextBtn();
     $("#foot-note").textContent = "点选项或键盘 A B C D · 自动发音";
 
     if (w.mode === "meaning") {
@@ -477,15 +479,30 @@
         <div class="note">${escapeHtml(w.note || "")}</div>
         <div class="next-row">
           <button class="sound-btn" id="btn-again">再听一遍</button>
-          <button class="big-btn gold" id="btn-next">${state.wordIndex >= totalOf(s) - 1 ? "串好啦" : "下一词"}</button>
         </div>
       </div>`;
-    $("#btn-again").onclick = () => speak(w.word);
-    $("#btn-next").onclick = next;
+    const again = $("#btn-again");
+    if (again) again.onclick = () => speak(w.word);
+    showNextBtn(state.wordIndex >= totalOf(s) - 1 ? "串好啦" : "下一词");
     $("#foot-note").textContent = (ok ? "答对" : (i < 0 ? "超时，正确答案是 " + LETTERS[w.answer] : "你选了 " + pickedLabel)) + " · 词根拆解已给出";
     renderSkewer();
     setTimeout(() => speak(w.word), ok ? 380 : 420);
     state.auto = setTimeout(next, 9000);
+  }
+
+  function hideNextBtn() {
+    const btn = $("#btn-next");
+    if (!btn) return;
+    btn.hidden = true;
+    btn.onclick = null;
+  }
+
+  function showNextBtn(label) {
+    const btn = $("#btn-next");
+    if (!btn) return;
+    btn.hidden = false;
+    btn.textContent = label;
+    btn.onclick = next;
   }
 
   function next() {
