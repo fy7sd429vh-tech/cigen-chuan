@@ -62,6 +62,44 @@
     if (state.audio) { try { state.audio.pause(); } catch {} state.audio = null; }
     try { window.speechSynthesis.cancel(); } catch {}
   }
+  function playJudge(ok) {
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!state.audioCtx) state.audioCtx = new AC();
+      const ctx = state.audioCtx;
+      if (ctx.state === "suspended") ctx.resume();
+      const now = ctx.currentTime;
+      if (ok) {
+        [523.25, 659.25, 783.99].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.value = freq;
+          const t = now + i * 0.07;
+          gain.gain.setValueAtTime(0.0001, t);
+          gain.gain.exponentialRampToValueAtTime(0.14, t + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.22);
+        });
+      } else {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "square";
+        osc.frequency.setValueAtTime(196, now);
+        osc.frequency.exponentialRampToValueAtTime(98, now + 0.28);
+        gain.gain.setValueAtTime(0.07, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.34);
+      }
+    } catch (e) {}
+  }
 
   function doneCount(id) {
     const d = state.stats.done[id] || [];
@@ -426,7 +464,8 @@
     bar.classList.add("ok");
     $("#timer").classList.remove("warn");
     $("#timer").textContent = "";
-    $("#badge").textContent = (ok ? "答对了 · " : "看答案 · ") + "下一词";
+    $("#badge").textContent = ok ? "答对了" : "答错了 · 正确答案已标出";
+    playJudge(ok);
 
     const pickedLabel = i >= 0 ? LETTERS[i] : "超时";
     const ansText = w.mode === "meaning" ? w.meaning : w.word;
@@ -445,7 +484,7 @@
     $("#btn-next").onclick = next;
     $("#foot-note").textContent = (ok ? "答对" : (i < 0 ? "超时，正确答案是 " + LETTERS[w.answer] : "你选了 " + pickedLabel)) + " · 词根拆解已给出";
     renderSkewer();
-    speak(w.word);
+    setTimeout(() => speak(w.word), ok ? 380 : 420);
     state.auto = setTimeout(next, 9000);
   }
 
