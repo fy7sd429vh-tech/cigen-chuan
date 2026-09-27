@@ -167,9 +167,10 @@
     roots.innerHTML = STRINGS.map((s, idx) => {
       const n = doneCount(s.id);
       const total = totalOf(s);
+      const started = n > 0;
       const learned = n === total && total > 0;
       const tag = s.single ? "单记" : (isJunior(s) ? "初中" : "词根");
-      return `<button class="root-row${learned ? " done" : ""}" data-i="${idx}">
+      return `<button class="root-row${learned ? " done" : started ? " seen" : ""}" data-i="${idx}">
         <div class="body">
           <div class="en">${escapeHtml(s.root)} <em>= ${escapeHtml(s.meaning)}</em></div>
           <div class="meta">${escapeHtml(tag)} · ${escapeHtml(s.tip)}</div>
