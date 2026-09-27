@@ -341,7 +341,7 @@
     const { s } = current();
     const done = state.stats.done[s.id] || [];
     $("#skewer").innerHTML = s.words.map((w, i) => {
-      const cls = i === state.wordIndex ? " now" : done[i] ? " done" : "";
+      const cls = (i === state.wordIndex ? " now" : "") + (done[i] ? " done" : "");
       let body = "";
       if (done[i] || (i === state.wordIndex && state.locked)) {
         body = `<div><div class="kw">${highlight(w.word, w.highlight)}</div><div class="km">${escapeHtml(w.meaning)}</div></div>`;
